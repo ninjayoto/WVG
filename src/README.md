@@ -1,7 +1,7 @@
 # WVG
 WVG, or Will's View Generator, is a simple tool created to help you generate realistic views for your website.
 It uses many different user agents, referers, and proxies within the TOR network to accomplish this task.
-Moreover, unlike other common view generators, this program doesn't flood the server with requests but does it at a slower pace and at random intervals to make the views seem more realistic.
+Moreover, unlike other common view generators, this program doesn't flood the server with requests but does it at a slower pace and at random intervals to make the traffic seem more realistic.  Do not use this program on websites if it violates laws or the host's rules.
 This program was created for a programming challenge in high school, so it still needs to be polished.  Please report all issues on my Github page.
 
 ## Getting Started
@@ -34,6 +34,10 @@ Some future goals for this program will be:
 * Better GUI
 * Get rid of the excess logging messages caused by some of the libraries used
 * More randomized interaction with webpages - perhaps even add clicking and scrolling!
+* More efficient code
+* Better support on Linux
+* Create a script that allows for updates
+
 Let me know of any new features you want and please let me know of the issues!
 
 ## License
