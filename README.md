@@ -4,6 +4,8 @@ It uses many different user agents, referers, and proxies within the TOR network
 Moreover, unlike other common view generators, this program doesn't flood the server with requests but does it at a slower pace and at random intervals to make the traffic seem more realistic.  Do not use this program on websites if it violates your region's laws or your host's rules.
 This program was created for a programming challenge in high school, so it still needs to be polished.  Please report all issues on my Github page.
 
+![WVG](https://s17.postimg.org/swrve60yn/main.jpg)
+
 ## Getting Started
 
 This program only works on Windows (tested on 7, 8.1, and 10) and some distributions of GNU/Linux (tested on Debian and Ubuntu).
