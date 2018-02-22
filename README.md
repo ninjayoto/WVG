@@ -34,6 +34,7 @@ Currently, you may see outputs of socket exceptions during its usage in the term
 I hope that this program will be made better with some extra work and your feedback.  
 Some future goals for this program will be:
 * Better GUI
+* Multithreading
 * Get rid of the excess logging messages caused by some of the libraries used
 * More randomized interaction with webpages - perhaps even add clicking and scrolling!
 * More efficient code
