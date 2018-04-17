@@ -1,5 +1,5 @@
 # WVG
-![WVG](https://s17.postimg.org/swrve60yn/main.jpg)
+![WVG](https://s9.postimg.cc/xrh88avin/main.jpg)
 
 WVG, or Will's View Generator, is a simple tool created to help you generate realistic views for your website.
 It uses many different user agents, referers, and proxies within the TOR network to accomplish this task.
