@@ -14,7 +14,7 @@ public class Bot
     private String[] agents;
     private String[] referers;
 
-    public Bot (int y, String z)
+    public Bot (int y, String z, String uA, String ref)
     {
         TIMES = y;
         LINK = z;
