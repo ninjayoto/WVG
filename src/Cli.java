@@ -18,6 +18,9 @@ public class Cli
         options.addOption("h", "help", false, "Shows help for this program.");
         options.addOption("w", "website", true, "The website you want to generate views for. Make sure to enter a proper url.");
         options.addOption("t", "time", true, "The number of views you want for the site.");
+        options.addOption("u", "useragents", true, "Your custom list of user-agents. Do not use this option if you want the default list.");
+        options.addOption("r", "referers", true, "Your custom list of referers. Do not use this option if you want the default list.");
+        options.addOption("m", "multithread", true, "The number of threads you want");
         //maybe add update referals, remember to include in help if add
     }
 
@@ -93,17 +96,11 @@ public class Cli
         String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
         System.out.println(important);
         System.out.println("Now please wait while the program generates views...");
-        if (SystemUtils.IS_OS_WINDOWS)
+        if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX)
         {
-            WinBot winbot = new WinBot(time, site);
-            winbot.run();
+            Bot bot = new Bot (time, site, null, null); //not finished yet here
+            bot.run();
         }
-        else if (SystemUtils.IS_OS_LINUX)
-        {
-            LinuxBot linuxbot = new LinuxBot(time, site);
-            linuxbot.run();
-        }
-
         else
         {
             System.out.println("This program does not support this OS.");
