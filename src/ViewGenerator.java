@@ -1,5 +1,7 @@
 public class ViewGenerator
 {
+    public static int progress;
+    
     public static void main (String [] args) throws Exception
     {
         Referers.initialize();
@@ -9,8 +11,11 @@ public class ViewGenerator
         }
         else
         {
-            Cli cli = new Cli(args);
-            cli.parse();
+            {
+                Cli cli = new Cli(args);
+                cli.parse();
+
+            }
         }
     }
 }
