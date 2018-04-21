@@ -55,8 +55,9 @@ public class Bot
                 request.addHeader("User-Agent", agents[i]);
                 request.addHeader("Referer",referers[i]);
                 HttpResponse response = client.execute(request);
-                System.out.println("\nSending 'GET' request to URL : " + LINK); //these two lines are for testing
-                System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+                ViewGenerator.progress += 1;
+                //System.out.println("\nSending 'GET' request to URL : " + LINK); //these two lines are for testing
+                //System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
                 RandomPauser.pause();
                 client.getConnectionManager().shutdown();
             }
