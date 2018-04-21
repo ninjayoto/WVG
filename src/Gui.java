@@ -26,27 +26,37 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.JComboBox;
+import javax.swing.JProgressBar;
+import java.awt.BorderLayout;
+import javax.swing.UIManager;
 
 //performance options will be added in the future
 public class Gui
 {
     public static void start()
     {
+        UIManager.put("ProgressBar.selectionForeground", Color.RED);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = screenSize.width/2;
         int centerY = screenSize.height/2;
         JWindow window = new JWindow();
         JWindow loading = new JWindow();
+        JWindow generator = new JWindow();
         ImageIcon main = new ImageIcon("resources/main.jpg");
+        ImageIcon generate = new ImageIcon("resources//generating.png");
         ImageIcon splash = new ImageIcon("resources//splash.png");
         ImageIcon load = new ImageIcon("resources//loading.gif");
         window.getContentPane().add(new JLabel("", splash, SwingConstants.CENTER));
+        generator.getContentPane().add(new JLabel("", generate, SwingConstants.CENTER));
         loading.getContentPane().add(new JLabel("", load, SwingConstants.CENTER));
         loading.setBackground(new Color(0, 0, 0, 0));
         loading.setBounds(centerX - 250, centerY, 500, 500);
         window.setBounds(0, 0, 500, 500);
         window.setLocationRelativeTo(null);
         window.setBackground(new Color(0,0,0,0));
+        generator.setBounds(0, 0, 500, 500);
+        generator.setLocationRelativeTo(null);
+        generator.setBackground(new Color(0,0,0,0));
         window.setVisible(true);
         loading.setVisible(true);
         try 
@@ -98,6 +108,16 @@ public class Gui
         int times = 0;
         String userAgent = null;
         String ref = null;
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setStringPainted(true);
+        progressBar.setBorder(null);
+        JWindow generating = new JWindow();
+        generating.getContentPane().add(progressBar, BorderLayout.SOUTH);
+        generating.setBounds(0, 0, 500, 500);
+        generating.setLocationRelativeTo(null);
+        generating.setBackground(new Color(0,0,0,0));
         try
         {
             do
@@ -171,7 +191,10 @@ public class Gui
             }while (!urlValid || !timeValid);
             String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
             JOptionPane.showMessageDialog(null, important, "Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
-            JOptionPane.showMessageDialog(null, "This windows will close for now and the program will let you know when the process has finished.", "Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
+            generator.setVisible(true);
+            generator.toFront();
+            generating.setVisible(true); //FIX THIS PART
+            generating.toFront();
             if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX)
             {
                 Bot bot;
