@@ -227,7 +227,7 @@ public class Gui
         }
     }
 
-    public static String linkString(String site)
+    private static String linkString(String site)
     {
         if (!site.substring(0, 7).equals("http://"))
         {
