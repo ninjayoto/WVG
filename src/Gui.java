@@ -28,14 +28,14 @@ import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
-import javax.swing.UIManager;
+import java.lang.Thread;
+import java.util.concurrent.TimeUnit;
 
 //performance options will be added in the future
 public class Gui
 {
     public static void start()
     {
-        UIManager.put("ProgressBar.selectionForeground", Color.RED);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = screenSize.width/2;
         int centerY = screenSize.height/2;
@@ -69,6 +69,11 @@ public class Gui
         }
         window.setVisible(false);
         loading.setVisible(false);
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_LINUX)
+        {
+            JOptionPane.showMessageDialog(null, "This program does not work on this system yet.","Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
+            System.exit(0);
+        }
         Object [] options = {"Continue", "Exit"};
         JFileChooser userAgentSelect = new JFileChooser();
         JFileChooser refSelect = new JFileChooser();
@@ -195,32 +200,36 @@ public class Gui
             generator.toFront();
             generating.setVisible(true); //FIX THIS PART
             generating.toFront();
-            if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX)
+            MyThread thread = new MyThread(times, site, userAgent, ref, main);
+            thread.start();
+            ViewGenerator.progress = 0;
+            while (ViewGenerator.progress <= 100) 
             {
-                Bot bot;
-                if (userAgent == null && ref == null)
+                progressBar.setValue(ViewGenerator.progress);
+                try 
                 {
-                    bot = new Bot (times, site, null, null);
-                }
-                else if (userAgent == null)
+                    Thread.sleep(5000);
+                } 
+                catch (InterruptedException e) 
                 {
-                    bot = new Bot (times, site, userAgent, null);
+                    Thread.currentThread().interrupt();
+                    break;
                 }
-                else if (ref == null)
-                {
-                    bot = new Bot (times, site, null, ref);
-                }
-                else
-                {
-                    bot = new Bot (times, site, userAgent, ref);
-                }
-                bot.run();
             }
-            else
+            try
             {
-                JOptionPane.showMessageDialog(null, "This program does not work on this system yet.","Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
+                thread.join();
+                generator.setVisible(false);
+                generating.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Views Generated!  Thanks for using this program!", "Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
             }
-            JOptionPane.showMessageDialog(null, "Views Generated!  Thanks for using this program!", "Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
+            catch (Exception e)
+            {
+                generator.setVisible(false);
+                generating.setVisible(false);
+                JOptionPane.showMessageDialog(null, "An unknown error occurred...","Will's View Generator", JOptionPane.INFORMATION_MESSAGE, main);
+                System.exit(0);
+            }
         }
         catch (Exception e)
         {
@@ -242,5 +251,35 @@ public class Gui
             }
         }
         return site;
+    }
+}
+
+class MyThread extends Thread
+{
+    private Bot bot;
+
+    public MyThread(int times, String site, String userAgent, String ref, ImageIcon main)
+    {
+        if (userAgent == null && ref == null)
+        {
+            bot = new Bot (times, site, null, null);
+        }
+        else if (userAgent == null)
+        {
+            bot = new Bot (times, site, userAgent, null);
+        }
+        else if (ref == null)
+        {
+            bot = new Bot (times, site, null, ref);
+        }
+        else
+        {
+            bot = new Bot (times, site, userAgent, ref);
+        }
+    }
+
+    public void run()
+    {
+        bot.run();
     }
 }
