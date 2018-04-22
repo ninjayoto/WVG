@@ -200,7 +200,7 @@ public class Gui
             JOptionPane.showMessageDialog(null, important, "WVG (Will's View Generator) v." + ViewGenerator.version, JOptionPane.INFORMATION_MESSAGE, main);
             generator.setVisible(true);
             generator.toFront();
-            generating.setVisible(true); //FIX THIS PART
+            generating.setVisible(true);
             generating.toFront();
             loading.setBounds(centerX - 250, centerY + 25, 500, 500);
             loading.setVisible(true);
