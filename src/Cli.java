@@ -6,6 +6,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.lang3.SystemUtils;
+import java.lang.Thread;
+import java.util.concurrent.TimeUnit;
+import java.text.DecimalFormat;
 
 public class Cli
 {
@@ -20,18 +23,34 @@ public class Cli
         options.addOption("t", "time", true, "The number of views you want for the site.");
         options.addOption("u", "useragents", true, "Your custom list of user-agents. Do not use this option if you want the default list.");
         options.addOption("r", "referers", true, "Your custom list of referers. Do not use this option if you want the default list.");
-        options.addOption("m", "multithread", true, "The number of threads you want");
+        options.addOption("v", "version", false, "Shows program version.");
+        //options.addOption("m", "multithread", true, "The number of threads you want");
         //maybe add update referals, remember to include in help if add
     }
 
     public void parse()
     {
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_LINUX)
+        {
+            System.out.println("WVG does not support this OS as of now.");
+            System.exit(0);
+        }
         CommandLineParser parser = new BasicParser();
         CommandLine cmd = null;
         try
         {
             cmd = parser.parse(options, args);
-            if (cmd.hasOption("h"))
+            if (cmd.hasOption("h") && cmd.hasOption("v"))
+            {
+                System.out.println("Version: " + ViewGenerator.VERSION);
+                help();
+            }
+            else if (cmd.hasOption("v"))
+            {
+                System.out.println("Version: " + ViewGenerator.VERSION);
+                System.exit(0);
+            }
+            else if (cmd.hasOption("h"))
             {
                 help();
             }
@@ -56,23 +75,27 @@ public class Cli
                 {
                     help();
                 }
-                if (urlvalid.isValid(site) || site.length() > 4)
+                if (urlvalid.isValid(site))
                 {
-                    if (!site.substring(0, 7).equals("http://"))
+                    site = ViewGenerator.linkString(site);
+                    if (time >= 0)
                     {
-                        if (site.substring(0,8).equals("https://"))
+                        if (cmd.hasOption("u") && cmd.hasOption("r"))
                         {
-                            site = site.substring(8);
-                            site = "http://" + site;
+                            run (site, time, cmd.getOptionValue("u"), cmd.getOptionValue("r"));
+                        }
+                        else if (cmd.hasOption("u"))
+                        {
+                            run (site, time, cmd.getOptionValue("u"), null);
+                        }
+                        else if (cmd.hasOption("r"))
+                        {
+                            run (site, time, null, cmd.getOptionValue("r"));
                         }
                         else
                         {
-                            site = "http://" + site;
+                            run (site, time, null, null);
                         }
-                    }
-                    if (time >= 0)
-                    {
-                        run(site, time);
                     }
                 }
                 else
@@ -91,21 +114,71 @@ public class Cli
         }
     }
 
-    private void run(String site, int time)
+    private void run(String site, int times, String userAgent, String ref)
     {
         String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
         System.out.println(important);
         System.out.println("Now please wait while the program generates views...");
-        if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX)
+        Bot bot;
+        if (userAgent == null && ref == null)
         {
-            Bot bot = new Bot (time, site, null, null); //not finished yet here
-            bot.run();
+            bot = new Bot (times, site, null, null);
+        }
+        else if (userAgent == null)
+        {
+            bot = new Bot (times, site, userAgent, null);
+        }
+        else if (ref == null)
+        {
+            bot = new Bot (times, site, null, ref);
         }
         else
         {
-            System.out.println("This program does not support this OS.");
+            bot = new Bot (times, site, userAgent, ref);
         }
-        System.out.println("Thanks for using this program!");
+        MyThreadCLI thread = new MyThreadCLI(bot);
+        thread.start();
+        System.out.println();
+        String[] slashes = {"/", "|", "\\", "--"};
+        int index = 0;
+        while (ViewGenerator.progress < times) 
+        {
+            int temp = (int)(((double)ViewGenerator.progress / times) * 100);
+            DecimalFormat df = new DecimalFormat("#.00");
+            double perc = ((double)ViewGenerator.progress / times) * 100;
+            if (index == 4)
+            {
+                index = 0;
+            }
+            if (ViewGenerator.progress == 0)
+            {
+                System.out.print("\rGenerated " + ViewGenerator.progress + " out of " + times + " view(s). (0.00%)  " + slashes[index]);
+            }
+            else
+            {
+                System.out.print("\rGenerated " + ViewGenerator.progress + " out of " + times + " view(s).  (" + df.format(perc) + "%)  " + slashes[index]);
+            }
+            index++;
+            try 
+            {
+                Thread.sleep(100);
+            } 
+            catch (InterruptedException e) 
+            {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        try
+        {
+            thread.join();
+            System.out.println("Views Generated!");
+            System.out.println("Thanks for using WVG!");
+        }
+        catch (Exception e)
+        {
+            System.out.println("An unknown error occurred... WVG will exit.");
+        }
         System.exit(0);
     }
 
@@ -114,5 +187,20 @@ public class Cli
         HelpFormatter formater = new HelpFormatter();
         formater.printHelp(" ", options);
         System.exit(0);
+    }
+}
+
+class MyThreadCLI extends Thread
+{
+    private Bot bot;
+
+    public MyThreadCLI(Bot bot)
+    {
+        this.bot = bot;
+    }
+
+    public void run()
+    {
+        bot.run();
     }
 }
