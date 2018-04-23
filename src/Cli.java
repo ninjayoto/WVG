@@ -6,7 +6,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.lang3.SystemUtils;
-import java.lang.Thread;
 import java.util.concurrent.TimeUnit;
 import java.text.DecimalFormat;
 
@@ -119,25 +118,8 @@ public class Cli
         String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
         System.out.println(important);
         System.out.println("Now please wait while the program generates views...");
-        Bot bot;
-        if (userAgent == null && ref == null)
-        {
-            bot = new Bot (times, site, null, null);
-        }
-        else if (userAgent == null)
-        {
-            bot = new Bot (times, site, userAgent, null);
-        }
-        else if (ref == null)
-        {
-            bot = new Bot (times, site, null, ref);
-        }
-        else
-        {
-            bot = new Bot (times, site, userAgent, ref);
-        }
-        MyThreadCLI thread = new MyThreadCLI(bot);
-        thread.start();
+        Bot bot = new Bot(times, site, userAgent, ref);
+        bot.start();
         System.out.println();
         String[] slashes = {"/", "|", "\\", "--"};
         int index = 0;
@@ -171,7 +153,7 @@ public class Cli
         }
         try
         {
-            thread.join();
+            bot.join();
             System.out.println("Views Generated!");
             System.out.println("Thanks for using WVG!");
         }
@@ -187,20 +169,5 @@ public class Cli
         HelpFormatter formater = new HelpFormatter();
         formater.printHelp(" ", options);
         System.exit(0);
-    }
-}
-
-class MyThreadCLI extends Thread
-{
-    private Bot bot;
-
-    public MyThreadCLI(Bot bot)
-    {
-        this.bot = bot;
-    }
-
-    public void run()
-    {
-        bot.run();
     }
 }
