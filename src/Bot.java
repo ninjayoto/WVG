@@ -6,15 +6,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import java.lang.Thread;
 
-public class Bot
+public class Bot extends Thread
 {
     private final int TIMES;
     private final String LINK;
     private String[] agents;
     private String[] referers;
 
-    public Bot (int y, String z, String uA, String ref)
+    public Bot (int y, String z, String uA, String ref) //check nulls
     {
         TIMES = y;
         LINK = z;
