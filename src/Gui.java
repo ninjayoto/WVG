@@ -28,7 +28,6 @@ import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
-import java.lang.Thread;
 import java.util.concurrent.TimeUnit;
 import java.text.DecimalFormat;
 
@@ -206,8 +205,8 @@ public class Gui
             loading.setBounds(centerX - 250, centerY + 25, 500, 500);
             loading.setVisible(true);
             loading.toFront();
-            MyThread thread = new MyThread(times, site, userAgent, ref, main);
-            thread.start();
+            Bot bot = new Bot(times, site, userAgent, ref);
+            bot.start();
             progressBar.setString("Initializing...");
             Thread.sleep(500);
             while (ViewGenerator.progress < times) 
@@ -240,7 +239,7 @@ public class Gui
             Thread.sleep(500);
             try
             {
-                thread.join();
+                bot.join();
                 generator.setVisible(false);
                 generating.setVisible(false);
                 JOptionPane.showMessageDialog(null, "Views Generated!  Thanks for using this program!", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.INFORMATION_MESSAGE, main);
@@ -256,35 +255,5 @@ public class Gui
         catch (Exception e)
         {
         }
-    }
-}
-
-class MyThread extends Thread
-{
-    private Bot bot;
-
-    public MyThread(int times, String site, String userAgent, String ref, ImageIcon main)
-    {
-        if (userAgent == null && ref == null)
-        {
-            bot = new Bot (times, site, null, null);
-        }
-        else if (userAgent == null)
-        {
-            bot = new Bot (times, site, userAgent, null);
-        }
-        else if (ref == null)
-        {
-            bot = new Bot (times, site, null, ref);
-        }
-        else
-        {
-            bot = new Bot (times, site, userAgent, ref);
-        }
-    }
-
-    public void run()
-    {
-        bot.run();
     }
 }
