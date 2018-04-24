@@ -1,27 +1,25 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class Referers
 {
-    private static String[] arr = new String[5000];
+    private static ArrayList<String> arr = new ArrayList<String>();
 
-    public static void initialize()
+    public static void initialize(String filename)
     {
-        int counter = 0;
         try
         {
-            FileReader fr = new FileReader("5000sites");
+            FileReader fr = new FileReader(filename);
             BufferedReader br = new BufferedReader(fr);
             String line = null;
             while ((line = br.readLine()) != null)
             {
-                arr[counter] = line;
-                counter++;
+                arr.add(line);
             }
         }
         catch (Exception e)
         {
-            System.out.println("Error! \n" + e);
         }
     }
     
@@ -31,8 +29,8 @@ public class Referers
         int random;
         for (int i = 0; i < referers.length; i++)
         {
-            random = (int)(Math.random() * 5000) + 1;
-            referers[i] = arr[random];
+            random = (int)(Math.random() * arr.size()) + 1;
+            referers[i] = arr.get(random);
         }
         return referers;
     }
