@@ -66,7 +66,6 @@ public class Bot extends Thread
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet(LINK);
                 request.addHeader("User-Agent", agents[i]);
-                System.out.println(agents[i] + ", " + referers[i]);
                 request.addHeader("Referer",referers[i]);
                 HttpResponse response = client.execute(request);
                 ViewGenerator.progress += 1;
