@@ -29,7 +29,7 @@ public class Referers
         int random;
         for (int i = 0; i < referers.length; i++)
         {
-            random = (int)(Math.random() * arr.size()) + 1;
+            random = (int)(Math.random() * arr.size());
             referers[i] = arr.get(random);
         }
         return referers;
