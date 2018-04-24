@@ -136,11 +136,11 @@ public class Gui
                     {
                         if (userAgentSelect.getSelectedFile() != null)
                         {
-                            userAgent = userAgentSelect.getSelectedFile().toString();
+                            userAgent = userAgentSelect.getSelectedFile().getName();
                         }
                         if (refSelect.getSelectedFile() != null)
                         {
-                            ref = refSelect.getSelectedFile().toString();
+                            ref = refSelect.getSelectedFile().getName();
                         }
                         //perfLevel = dropdown.getSelectedItem().toString();
                         site = website.getText();
@@ -254,6 +254,7 @@ public class Gui
         }
         catch (Exception e)
         {
+            System.out.println(e);
         }
     }
 }
