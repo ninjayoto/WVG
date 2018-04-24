@@ -17,6 +17,7 @@ public class Bot extends Thread
 
     public Bot (int y, String z, String uA, String ref) //check nulls
     {
+        Referers.initialize();
         TIMES = y;
         LINK = z;
         loadUserAgents();
