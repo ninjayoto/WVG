@@ -8,6 +8,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.lang3.SystemUtils;
 import java.util.concurrent.TimeUnit;
 import java.text.DecimalFormat;
+import java.io.File;
 
 public class Cli
 {
@@ -81,15 +82,36 @@ public class Cli
                     {
                         if (cmd.hasOption("u") && cmd.hasOption("r"))
                         {
-                            run (site, time, cmd.getOptionValue("u"), cmd.getOptionValue("r"));
+                            if (new File(cmd.getOptionValue("u")).exists() && new File(cmd.getOptionValue("r")).exists())
+                            {
+                                run (site, time, cmd.getOptionValue("u"), cmd.getOptionValue("r"));
+                            }
+                            else
+                            {
+                                dneFile();
+                            }
                         }
                         else if (cmd.hasOption("u"))
                         {
-                            run (site, time, cmd.getOptionValue("u"), null);
+                            if (new File(cmd.getOptionValue("u")).exists())
+                            {
+                                run (site, time, cmd.getOptionValue("u"), null);
+                            }
+                            else
+                            {
+                                dneFile();
+                            }
                         }
                         else if (cmd.hasOption("r"))
                         {
-                            run (site, time, null, cmd.getOptionValue("r"));
+                            if (new File(cmd.getOptionValue("r")).exists())
+                            {
+                                run (site, time, null, cmd.getOptionValue("r"));
+                            }
+                            else
+                            {
+                                dneFile();
+                            }
                         }
                         else
                         {
@@ -164,6 +186,12 @@ public class Cli
         System.exit(0);
     }
 
+    private void dneFile()
+    {
+        System.out.println("One or more of the files specified does not exist");
+        System.exit(0);
+    }
+    
     private void help()
     {
         HelpFormatter formater = new HelpFormatter();
