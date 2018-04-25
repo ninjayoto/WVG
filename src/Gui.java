@@ -254,7 +254,6 @@ public class Gui
         }
         catch (Exception e)
         {
-            System.out.println(e);
         }
     }
 }
