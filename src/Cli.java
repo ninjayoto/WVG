@@ -24,6 +24,7 @@ public class Cli
         options.addOption("u", "useragents", true, "Your custom list of user-agents. Do not use this option if you want the default list.");
         options.addOption("r", "referers", true, "Your custom list of referers. Do not use this option if you want the default list.");
         options.addOption("v", "version", false, "Shows program version.");
+        options.addOption("1", "update", false, "Checks for updates and goes to download link if there is");
         //options.addOption("m", "multithread", true, "The number of threads you want");
         //maybe add update referals, remember to include in help if add
     }
@@ -53,6 +54,27 @@ public class Cli
             else if (cmd.hasOption("h"))
             {
                 help();
+            }
+            else if (cmd.hasOption("1"))
+            {
+                System.out.println("Checking for updates...");
+                if (!ViewGenerator.isUpdate())
+                {
+                    System.out.println("No updates available!");
+                    System.exit(0);
+                }
+                else
+                {
+                    System.out.println("Updates available!  Opening download page...");
+                    try
+                    {
+                        ViewGenerator.update(SystemUtils.IS_OS_WINDOWS);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                    System.exit(0);
+                }
             }
             else if (cmd.hasOption("w") && cmd.hasOption("t"))
             {
@@ -191,7 +213,7 @@ public class Cli
         System.out.println("One or more of the files specified does not exist");
         System.exit(0);
     }
-    
+
     private void help()
     {
         HelpFormatter formater = new HelpFormatter();
