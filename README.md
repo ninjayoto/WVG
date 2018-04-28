@@ -35,9 +35,7 @@ I hope that this program will be made better with some extra work and your feedb
 Some future goals for this program will be:
 * Multiple requests at once from multiple ports
 * More randomized interaction with webpages - perhaps even add clicking and scrolling!
-* More efficient code
-* Better support on Linux
-* Create a script that allows for updates
+* Allow users to specify proxies
 
 Let me know of any new features you want and please let me know of the issues!
 
