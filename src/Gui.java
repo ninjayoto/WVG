@@ -30,6 +30,9 @@ import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
 import java.util.concurrent.TimeUnit;
 import java.text.DecimalFormat;
+import javax.swing.AbstractButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 //performance options will be added in the future
 public class Gui
@@ -90,6 +93,34 @@ public class Gui
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         String[] perfOptions = {"Very Low (Default)", "Low", "Medium", "High", "Very High"};
         JComboBox dropdown = new JComboBox(perfOptions);
+        JButton update = new JButton("Check for Updates!");
+        update.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                if (ViewGenerator.isUpdate())
+                {
+                    int dialogButton = JOptionPane.YES_NO_OPTION;
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Update Available!  Would you like to download it?  This application will exit and lead you to the download page!", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, dialogButton);
+                    if (dialogResult == 0)
+                    {
+                        try
+                        {
+                            ViewGenerator.update(SystemUtils.IS_OS_WINDOWS);
+                        }
+                        catch (Exception e)
+                        {
+                        }
+                        System.exit(0);
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "No Update Available", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        update.setVerticalTextPosition(AbstractButton.CENTER);
         panel.add(new JLabel("Site"));
         panel.add(website);
         panel.add(new JLabel("\n"));
@@ -102,6 +133,10 @@ public class Gui
         panel.add(new JLabel("Referer List"));
         panel.add(new JLabel("Blank for Default"));
         panel.add(refSelect);
+        panel.add(new JLabel("\n"));
+        panel.add(update);
+        panel.add(new JLabel("\n\n"));
+        panel.add(new JLabel("Licensed under GPLv3"));
         //panel.add(new JLabel("Performance"));
         //panel.add(dropdown);
         //panel.add(new JLabel("\n"));
@@ -220,7 +255,7 @@ public class Gui
                 }
                 else
                 {
-					progressBar.setString("Generated " + ViewGenerator.progress + " out of " + times + " view(s)... Currently at " + df.format(perc) + "%.");
+                    progressBar.setString("Generated " + ViewGenerator.progress + " out of " + times + " view(s)... Currently at " + df.format(perc) + "%.");
                 }
                 progressBar.setValue(temp);
                 try 
