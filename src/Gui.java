@@ -39,6 +39,7 @@ public class Gui
 {
     public static void start()
     {
+        final String TITLE = "WVG (Will's View Generator) v" + ViewGenerator.VERSION;
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -76,7 +77,7 @@ public class Gui
         loading.setVisible(false);
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_LINUX)
         {
-            JOptionPane.showMessageDialog(null, "This program does not work on this system yet.","WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.INFORMATION_MESSAGE, main);
+            JOptionPane.showMessageDialog(null, "This program does not work on this system yet.",TITLE, JOptionPane.INFORMATION_MESSAGE, main);
             System.exit(0);
         }
         Object [] options = {"Continue", "Exit"};
@@ -85,12 +86,8 @@ public class Gui
         JTextField website = new JTextField("Website for Views - make sure to include the http portion", 20);
         website.setPreferredSize( new Dimension( 10, 24 ));
         JTextField timesRun = new JTextField("Number of Views", 20);
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setPreferredSize(new Dimension( 800, 550 )); 
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         String[] perfOptions = {"Very Low (Default)", "Low", "Medium", "High", "Very High"};
         JComboBox dropdown = new JComboBox(perfOptions);
         JButton update = new JButton("Check for Updates!");
@@ -101,7 +98,7 @@ public class Gui
                 if (ViewGenerator.isUpdate())
                 {
                     int dialogButton = JOptionPane.YES_NO_OPTION;
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "Update Available!  Would you like to download it?  This application will exit and lead you to the download page!", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, dialogButton);
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Update Available!  Would you like to download it?  This application will exit and lead you to the download page!", TITLE, dialogButton);
                     if (dialogResult == 0)
                     {
                         try
@@ -116,7 +113,7 @@ public class Gui
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "No Update Available", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No Update Available", TITLE, JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -141,6 +138,10 @@ public class Gui
         //panel.add(dropdown);
         //panel.add(new JLabel("\n"));
         //String perfLevel = null;
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setPreferredSize(new Dimension( 800, 550 )); 
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         boolean urlValid = true;
         boolean timeValid = true;
         boolean goBack = true;
@@ -166,7 +167,7 @@ public class Gui
             {
                 if (goBack)
                 {
-                    int n = JOptionPane.showOptionDialog(null, scrollPane, "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, main, options, options[0]);
+                    int n = JOptionPane.showOptionDialog(null, scrollPane, TITLE, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, main, options, options[0]);
                     if (n == 0)
                     {
                         if (userAgentSelect.getSelectedFile() != null)
@@ -218,21 +219,21 @@ public class Gui
                 {
                     if (!urlValid && !timeValid)
                     {
-                        JOptionPane.showMessageDialog(null, "Invalid link and times... please try again", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Invalid link and times... please try again", TITLE, JOptionPane.ERROR_MESSAGE);
                     }
                     else if (!urlValid)
                     {
-                        JOptionPane.showMessageDialog(null, "Invalid link... please try again", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Invalid link... please try again", TITLE, JOptionPane.ERROR_MESSAGE);
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "Invalid times... please try again", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Invalid times... please try again", TITLE, JOptionPane.ERROR_MESSAGE);
                     }
                     goBack = true;
                 }
             }while (!urlValid || !timeValid);
             String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
-            JOptionPane.showMessageDialog(null, important, "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.INFORMATION_MESSAGE, main);
+            JOptionPane.showMessageDialog(null, important, TITLE, JOptionPane.INFORMATION_MESSAGE, main);
             generator.setVisible(true);
             generator.toFront();
             generating.setVisible(true);
@@ -277,13 +278,13 @@ public class Gui
                 bot.join();
                 generator.setVisible(false);
                 generating.setVisible(false);
-                JOptionPane.showMessageDialog(null, "Views Generated!  Thanks for using this program!", "WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.INFORMATION_MESSAGE, main);
+                JOptionPane.showMessageDialog(null, "Views Generated!  Thanks for using this program!", TITLE, JOptionPane.INFORMATION_MESSAGE, main);
             }
             catch (Exception e)
             {
                 generator.setVisible(false);
                 generating.setVisible(false);
-                JOptionPane.showMessageDialog(null, "An unknown error occurred...","WVG (Will's View Generator) v." + ViewGenerator.VERSION, JOptionPane.INFORMATION_MESSAGE, main);
+                JOptionPane.showMessageDialog(null, "An unknown error occurred...",TITLE, JOptionPane.INFORMATION_MESSAGE, main);
                 System.exit(0);
             }
         }
