@@ -165,6 +165,7 @@ public class Cli
         Bot bot = new Bot(times, site, userAgent, ref);
         bot.start();
         System.out.println();
+        //output is correct in terminal, IDE may make progress look weird 
         String[] slashes = {"/", "|", "\\", "--"};
         int index = 0;
         while (ViewGenerator.progress < times) 
