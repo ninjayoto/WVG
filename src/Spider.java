@@ -31,6 +31,7 @@ public class Spider
         links.add(url);
         lg = new LinkGetter[levels + 1]; //original link is in its own queue
         lg[0] = new LinkGetter(0);
+        Proxies.newProxy();
         lg[0].start();
         for (int i = 1; i <= levels; i++)
         {
@@ -45,8 +46,10 @@ public class Spider
             }
             catch (Exception e)
             {
-                System.out.println(e);
+                //System.out.println(e);
             }
         }
+        Proxies.stopProxy();
+        return;
     }
 }
