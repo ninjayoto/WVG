@@ -25,6 +25,8 @@ public class Cli
         options.addOption("r", "referers", true, "Your custom list of referers. Do not use this option if you want the default list.");
         options.addOption("v", "version", false, "Shows program version.");
         options.addOption("1", "update", false, "Checks for updates and goes to download link if there is");
+        options.addOption("s", "spider", true, "Starts a spider that stops after scraping specified amount of links.  Default thread is at 3 but this can be changed with the -T option.");
+        options.addOption("T", "threads", true, "Specify the threads for the spider");
         //options.addOption("m", "multithread", true, "The number of threads you want");
         //maybe add update referals, remember to include in help if add
     }
@@ -102,6 +104,26 @@ public class Cli
                     site = ViewGenerator.linkString(site);
                     if (time >= 0)
                     {
+                        try
+                        {
+                            if (cmd.hasOption("s"))
+                            {
+                                if (cmd.hasOption("T"))
+                                {
+                                    Spider spider = new Spider(site, Integer.parseInt(cmd.getOptionValue("T")), Integer.parseInt(cmd.getOptionValue("s")));
+                                    spider.start();
+                                }
+                                else
+                                {
+                                    Spider spider = new Spider(site, 3, Integer.parseInt(cmd.getOptionValue("s")));
+                                    spider.start();
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            help();
+                        }
                         if (cmd.hasOption("u") && cmd.hasOption("r"))
                         {
                             if (new File(cmd.getOptionValue("u")).exists() && new File(cmd.getOptionValue("r")).exists())
@@ -165,7 +187,7 @@ public class Cli
         Bot bot = new Bot(times, site, userAgent, ref);
         bot.start();
         System.out.println();
-        //output is correct in terminal, IDE may make progress look weird 
+        //output is correct in terminal, IDE may make progress look weird
         String[] slashes = {"/", "|", "\\", "--"};
         int index = 0;
         while (ViewGenerator.progress < times) 
