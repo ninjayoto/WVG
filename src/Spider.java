@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 
+//note that temps and cpu usage will spike if too many threads are used
 public class Spider extends Thread
 {
     //all spiders for each queue run in parallel and each thread only stops when the previous thread stops
