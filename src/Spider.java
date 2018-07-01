@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Spider
+public class Spider extends Thread
 {
     //all spiders for each queue run in parallel and each thread only stops when the previous thread stops
     public static LinkedList<String> links = new LinkedList<String>();
@@ -10,12 +10,29 @@ public class Spider
     public static int limit; //limit won't be capped exactly
     private static String url;
     private static int levels;
+    private String aURL;
+    private int level;
+    private int numCap;
 
+    //only one instance of spider will be created
     public static int getLevels()
     {
         return levels;
     }
-
+    
+    public Spider(String aURL, int level, int numCap)
+    {
+        this.aURL = aURL;
+        this.level = level;
+        this.numCap = numCap;
+    }
+    
+    public void run()
+    {
+        crawl(aURL, level, numCap);
+        ViewGenerator.isSpider = true;
+    }
+    
     public static void crawl(String aURL, int level, int numCap)
     {
         limit = numCap;
