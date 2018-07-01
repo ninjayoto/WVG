@@ -86,37 +86,39 @@ public class Gui
         JTextField website = new JTextField("Website for Views - make sure to include the http portion", 20);
         website.setPreferredSize( new Dimension( 10, 24 ));
         JTextField timesRun = new JTextField("Number of Views", 20);
+        JTextField spiderLimit = new JTextField("Limit for spider links (leave as 0 if spider not needed)", 20);
+        JTextField threadSpider = new JTextField("Threads for spider (default is 3)", 20);
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        String[] perfOptions = {"Very Low (Default)", "Low", "Medium", "High", "Very High"};
-        JComboBox dropdown = new JComboBox(perfOptions);
+        //String[] perfOptions = {"Very Low (Default)", "Low", "Medium", "High", "Very High"};
+        //JComboBox dropdown = new JComboBox(perfOptions);
         JButton update = new JButton("Check for Updates!");
         update.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent event)
             {
-                if (ViewGenerator.isUpdate())
+                public void actionPerformed(ActionEvent event)
                 {
-                    int dialogButton = JOptionPane.YES_NO_OPTION;
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "Update Available!  Would you like to download it?  This application will exit and lead you to the download page!", TITLE, dialogButton);
-                    if (dialogResult == 0)
+                    if (ViewGenerator.isUpdate())
                     {
-                        try
+                        int dialogButton = JOptionPane.YES_NO_OPTION;
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "Update Available!  Would you like to download it?  This application will exit and lead you to the download page!", TITLE, dialogButton);
+                        if (dialogResult == 0)
                         {
-                            ViewGenerator.update(SystemUtils.IS_OS_WINDOWS);
+                            try
+                            {
+                                ViewGenerator.update(SystemUtils.IS_OS_WINDOWS);
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                            System.exit(0);
                         }
-                        catch (Exception e)
-                        {
-                        }
-                        System.exit(0);
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "No Updates Available", TITLE, JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "No Update Available", TITLE, JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+            });
         update.setVerticalTextPosition(AbstractButton.CENTER);
         panel.add(new JLabel("Site"));
         panel.add(website);
@@ -131,6 +133,13 @@ public class Gui
         panel.add(new JLabel("Blank for Default"));
         panel.add(refSelect);
         panel.add(new JLabel("\n"));
+        panel.add(new JLabel("SPIDERING"));
+        panel.add(new JLabel("Spider Link Limit"));
+        panel.add(spiderLimit);
+        panel.add(new JLabel("\n"));
+        panel.add(new JLabel("Threads"));
+        panel.add(threadSpider);
+        panel.add(new JLabel("\n\n"));
         panel.add(update);
         panel.add(new JLabel("\n\n"));
         panel.add(new JLabel("Licensed under GPLv3"));
@@ -232,6 +241,17 @@ public class Gui
                     goBack = true;
                 }
             }while (!urlValid || !timeValid);
+            try
+            {
+                if (!spiderLimit.getText().equals("0"))
+                {
+                    Spider spider = new Spider(site, Integer.parseInt(threadSpider.getText()), Integer.parseInt(spiderLimit.getText()));
+                    spider.start();
+                }
+            }
+            catch (Exception e)
+            {
+            }
             String important = "IMPORTANT!\nThis program is not responsible your IP getting blacklisted for bot activity.\nThis program uses random user-agents, referers, and the TOR onion network\n(including some other proxies) to hide your computer's identity and generate realistic views.\nThis product is produced independently from the Tor anonymity software and carries\nno guarantee from The Tor Project about quality, suitability or anything else.\nLearn more at https://www.torproject.org/.";
             JOptionPane.showMessageDialog(null, important, TITLE, JOptionPane.INFORMATION_MESSAGE, main);
             generator.setVisible(true);
@@ -285,8 +305,8 @@ public class Gui
                 generator.setVisible(false);
                 generating.setVisible(false);
                 JOptionPane.showMessageDialog(null, "An unknown error occurred...",TITLE, JOptionPane.INFORMATION_MESSAGE, main);
-                System.exit(0);
             }
+            System.exit(0);
         }
         catch (Exception e)
         {
