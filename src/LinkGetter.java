@@ -112,7 +112,7 @@ public class LinkGetter extends Thread
         }
         catch (Exception e)
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
     }
 }
