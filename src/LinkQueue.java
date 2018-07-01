@@ -7,6 +7,7 @@ public class LinkQueue
     public void enqueueLink(String url)
     {
         links.add(url);
+        return;
     }
     
     public String dequeueLink()
