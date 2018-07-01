@@ -11,7 +11,7 @@ import java.lang.Thread;
 public class Bot extends Thread
 {
     private final int TIMES;
-    private final String LINK;
+    private String link;
     private String[] agents;
     private String[] referers;
 
@@ -26,7 +26,7 @@ public class Bot extends Thread
             Referers.initialize(ref);
         }
         TIMES = y;
-        LINK = z;
+        link = z;
         if (uA != null)
         {
             UserAgent.customTrue(uA);
@@ -58,18 +58,23 @@ public class Bot extends Thread
     private void startbot()
     {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+        String link = this.link;
         for (int i = 0; i < TIMES; i++)
         {
             newProxy();
             try
             {
+                if (ViewGenerator.isSpider)
+                {
+                    link = Spider.links.get((int)(Math.random() * Spider.links.size()));
+                }
                 HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet(LINK);
+                HttpGet request = new HttpGet(link);
                 request.addHeader("User-Agent", agents[i]);
                 request.addHeader("Referer",referers[i]);
                 HttpResponse response = client.execute(request);
                 ViewGenerator.progress += 1;
-                //System.out.println("\nSending 'GET' request to URL : " + LINK); //these two lines are for testing
+                //System.out.println("\nSending 'GET' request to URL : " + link); //these two lines are for testing
                 //System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
                 RandomPauser.pause();
                 client.getConnectionManager().shutdown();
