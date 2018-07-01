@@ -7,6 +7,7 @@ public class ViewGenerator
 {
     public static int progress;
     public static final String VERSION = "1.1.0";
+    public static boolean isSpider;
 
     public static void main (String [] args) throws Exception
     {
